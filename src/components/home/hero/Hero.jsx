@@ -37,7 +37,7 @@ const Hero = () => {
         <div className='container'>
           <div className="top-left-content">
             <h5>BUY | SELL</h5>
-            <h3>Payment Option: Full Payment | Installmental Payment | Crowd Funding </h3>
+            <h3>Payment Option: Outright Payment | Installmental Payment | Crowd Funding </h3>
           </div>
           <Heading title='Buy and Sell Homes at Your Own Price with Flexibility!: Unlock Your Ideal Property Journey:' />
 
