@@ -14,7 +14,7 @@ export const featured = [
   },
   {
     cover: "../images/hero/h3.png",
-    name: "Land",
+    name: "Residential Land",
     total: "300 Property",
   },
   {

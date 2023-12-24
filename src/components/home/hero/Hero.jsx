@@ -26,7 +26,7 @@ const Hero = () => {
   const propertyTypeOptions = [
     { label: "Commercial Bulding", value: "Commercial Bulding" },
     { label: "Residential Building", value: "Residential Building" },
-    { label: "Land", value: "Land" },
+    { label: "Residential Land", value: "Land" },
     { label: "Commercial Land", value: "Commercial Land" },
     { label: "Agricultural Land", value: "Agricultural Land" },
   ];
