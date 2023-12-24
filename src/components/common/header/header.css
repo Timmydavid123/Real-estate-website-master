@@ -1,0 +1,95 @@
+header {
+  background-color: #fff;
+  height: 10vh;
+  box-shadow: 0 5px 30px rgb(0 22 84 / 10%);
+  padding: 15px 0;
+  position: sticky;
+  top: 0;
+  z-index: 99999;
+}
+header img {
+  width: 270px;
+  margin-top: -120px;
+
+}
+header a {
+  margin-left: 30px;
+  transition: 0.5s;
+  font-weight: 500;
+}
+header a:hover {
+  color: #27ae60;
+}
+header span {
+  width: auto;
+  padding: 0px 6px;
+  background: #27ae60;
+  border-radius: 50px;
+  color: #ffffff;
+  margin-right: 4px;
+  font-weight: 400;
+}
+header h4 {
+  font-weight: 500;
+  margin-right: 10px;
+}
+.btn1 {
+  margin-left: 100px;
+}
+.btn9 {
+  margin-left: -200px;
+}
+header .toggle {
+  display: none;
+}
+
+.btn1{ 
+  background: linear-gradient(to right, #a0d8ab, #01e85e);
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 19px;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-top: -130px;
+}
+
+.btn9 {
+  margin-left: -200px;
+}
+
+@media screen and (max-width: 768px) {
+  header .logo {
+    order: -1; /* Move the logo to the beginning */
+    margin-left: -120px; /* Add margin between logo and other content */
+    margin-top: -10px;
+  }
+  .btn1{
+    margin-left: -50px;
+    margin-top: -140px;
+  }
+
+  header .button {
+    margin-left: auto; /* Move the login button to the end */
+  }
+
+  header .small {
+    position: absolute;
+    top: 10vh;
+    left: 0;
+    width: 100%;
+    background-color: #27ae60;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  header .small li a {
+    display: inline-block;
+    margin-bottom: 20px;
+    color: #fff;
+  }
+}

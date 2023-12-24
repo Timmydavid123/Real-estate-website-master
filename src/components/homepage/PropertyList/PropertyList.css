@@ -1,0 +1,50 @@
+/* Add these styles to your CSS file */
+.property-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+
+.property-card {
+  width: 300px;
+  margin: 20px;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.property-card img {
+  width: 100%;
+  height: auto;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+
+.property-card h2 {
+  font-size: 1.2rem;
+  margin-bottom: 5px;
+}
+
+.property-card p {
+  margin: 0;
+}
+
+.view-details {
+  display: block;
+  margin-top: 10px;
+  color: #007bff;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.property-list-loader,
+.property-list-error {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 1.2rem;
+}
+
+.property-list-error {
+  color: red;
+}

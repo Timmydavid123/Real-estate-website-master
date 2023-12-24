@@ -1,0 +1,102 @@
+.hero {
+  background-image: url("../../../../public/images/banner.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  height: 90vh;
+  width: 100%;
+}
+.hero .container {
+  padding-top: 15%;
+  
+}
+.hero h1 {  
+  color: #fff;
+  font-size: 40px;
+  margin-top: 70px;
+}
+.hero p {
+  color: #fff;
+  opacity: 0.8;
+}
+.top-left-content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 20px;
+  background-color: none; /* Add your preferred background color */
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-top: 140px;
+  color: #fff;
+}
+
+h5, h3 {
+  margin: 0;
+}
+form {
+  background-color: #fff;
+  border-radius: 5px;
+  margin-top: 50px;
+  padding: 0 20px;
+}
+form input {
+  padding: 10px;
+  width: 100%;
+  border: 1px solid rgba(128, 128, 128, 0.2);
+  margin-top: 5px;
+  border-radius: 5px;
+}
+form span {
+  font-size: 14px;
+  color: grey;
+}
+input::placeholder {
+  font-size: 17px;
+  color: black;
+}
+form .box {
+  padding: 15px;
+  border-left: 1px solid rgba(128, 128, 128, 0.2);
+}
+form .box:nth-child(1) {
+  border-left: none;
+}
+form h4 {
+  font-weight: 500;
+}
+.b-main{
+  margin-top: -10px;
+  margin-left: 45px;
+}
+@media screen and (max-width: 800px) {
+  .hero .container {
+    padding-top: 50%;
+  }
+  .hero h1 {
+      font-size: 20px;
+      margin-top: -55px;
+  }
+  .top-left-content {
+    margin-top: 70px;
+  }
+  .top-left-content h5 {
+    font-size: 15px;
+  }
+  .top-left-content h3 {
+    font-size: 15px;
+  }
+  form {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  form .box {
+    border-left: none;
+  }
+  form input {
+    width: 100%;
+  }
+}

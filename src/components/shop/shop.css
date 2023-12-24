@@ -1,0 +1,15 @@
+.shoppage {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+   }
+   
+   .filters {
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+   }
+   
+   .properties {
+    display: flex;
+   }

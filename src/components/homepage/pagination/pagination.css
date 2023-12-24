@@ -1,0 +1,26 @@
+/* Add these styles to your CSS file */
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+  }
+  
+  .pagination button {
+    margin: 0 5px;
+    padding: 8px;
+    cursor: pointer;
+    border: 1px solid #ddd;
+    background-color: #f9f9f9;
+  }
+  
+  .pagination button.active {
+    background-color: #4caf50;
+    color: white;
+  }
+  
+  .pagination-error {
+    text-align: center;
+    margin-top: 20px;
+    color: red;
+  }
+  

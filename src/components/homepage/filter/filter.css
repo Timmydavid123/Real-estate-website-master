@@ -1,0 +1,90 @@
+/* filter.css */
+
+.container {
+  margin-top: 20px;
+}
+
+.card {
+  border: none;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.filter-group {
+  margin-bottom: 20px;
+}
+
+.filter-content {
+  padding: 15px;
+}
+
+.filter-actions {
+  padding: 15px;
+}
+
+.unique-filter-location {
+  padding: 15px;
+}
+
+.unique-filter-location-heading {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.unique-filter-current-location {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.location-popup {
+  background-color: #fff;
+  border: 1px solid #dee2e6;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+}
+
+.location-popup h2 {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.location-popup p {
+  font-size: 16px;
+  margin-bottom: 5px;
+}
+
+.location-popup ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.location-popup li {
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+
+.loading-message,
+.error-message {
+  font-size: 18px;
+  font-weight: bold;
+  margin-top: 20px;
+}
+
+.loading-message {
+  color: #007bff; /* Bootstrap primary color */
+}
+
+.error-message {
+  color: #dc3545; /* Bootstrap danger color */
+}
