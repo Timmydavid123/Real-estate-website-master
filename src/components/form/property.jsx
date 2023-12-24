@@ -1,12 +1,17 @@
 import React, { useState } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useHistory } from 'react-router-dom';
+import SignatureCanvas from 'react-signature-canvas';
 import Select from 'react-select';
 import { states, Cities, LGAs } from '../data/Data';
 import './property.css';
 
 
 const PropertyForm = () => {
+  // Use useHistory instead of useNavigate
+  const history = useHistory();
+
   const [formData, setFormData] = useState({
     fullName: '',
     emailAddress: '',
@@ -29,7 +34,10 @@ const PropertyForm = () => {
     guarantor2Email: '',
     guarantor2Phone: '',
     guarantor2Address: '',
+    guarantor1Signature: null,
+    guarantor2Signature: null,
   });
+
 
   const [selectedState, setSelectedState] = useState(null);
   const [selectedCity, setSelectedCity] = useState(null);
@@ -78,12 +86,34 @@ const PropertyForm = () => {
       },
     }));
   };
+  const handleGuarantor1Signature = (data) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      guarantor1Signature: data,
+    }));
+  };
+
+  const handleGuarantor2Signature = (data) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      guarantor2Signature: data,
+    }));
+  };
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     // Display loader
     setLoading(true);
+
+
+    // Check if guarantor signatures are provided
+    if (!formData.guarantor1Signature || !formData.guarantor2Signature) {
+      toast.error('Guarantor signatures are required.');
+      setLoading(false);
+      return;
+    }
 
     // Validate all fields are filled
     const formFields = Object.values(formData).flat();
@@ -111,6 +141,10 @@ const PropertyForm = () => {
       toast.success('Form submitted successfully!');
       // Hide loader
       setLoading(false);
+
+      // Navigate to the identification page after successful submission
+      history.push('/identification');
+
     } catch (error) {
       console.error('Error submitting form:', error);
       toast.error('Failed to submit form. Please try again.');
@@ -302,6 +336,14 @@ const PropertyForm = () => {
           onChange={handleChange}
         ></textarea>
       </label>
+      <label>
+        Signature:
+        <SignatureCanvas
+          penColor="black"
+          canvasProps={{ width: 400, height: 200, className: 'signature-canvas' }}
+          onEnd={(data) => handleGuarantor1Signature(data)}
+        />
+      </label>
 
       <h2>Guarantor 2 Information</h2>
 
@@ -346,6 +388,14 @@ const PropertyForm = () => {
           value={formData.guarantor2Address}
           onChange={handleChange}
         ></textarea>
+      </label>
+      <label>
+        Signature:
+        <SignatureCanvas
+          penColor="black"
+          canvasProps={{ width: 400, height: 200, className: 'signature-canvas' }}
+          onEnd={(data) => handleGuarantor2Signature(data)}
+        />
       </label>
 
       {/* Submit Button */}

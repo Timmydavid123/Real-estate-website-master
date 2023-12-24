@@ -1,0 +1,23 @@
+/* identification.css */
+.dropzone {
+    border: 2px dashed #ccc;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+  }
+  
+  .dropzone p {
+    margin: 0;
+  }
+  
+  .identification-page {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  
+  .identification-page img {
+    max-width: 100%;
+    margin-top: 10px;
+  }
+  

@@ -11,6 +11,7 @@ import ForgotPassword from "../../Auth/forgotten-password/Forgot-pass"
 import ChangePassword from "../../Auth/change-password/change-pass"
 import Property from "../homepage/homepage/homepae"
 import PropertyForm from "../form/property"
+import IdentificationPage from "../identification/identification"
 
 
 const Pages = () => {
@@ -34,6 +35,7 @@ const Pages = () => {
         <Route exact path="/change-password" component={ChangePassword} />
         <Route exact path="/Property" component={Property} />
         <Route exact path="/propertyupload" component={PropertyForm} />
+        <Route path="/identification" exact component={IdentificationPage} />
       </Switch>
     </Router>
   );  
