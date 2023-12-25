@@ -19,22 +19,24 @@ const Property = () => {
   const [isLocationPopupVisible, setLocationPopupVisible] = useState(false);
 
   useEffect(() => {
-    fetch('https://api.example.com/property-types')
-      .then(response => response.json())
-      .then(data => setPropertyTypes(data))
-      .catch(error => setError(error));
+    const fetchData = async () => {
+      try {
+        const propertyTypesResponse = await fetch('https://api.example.com/property-types');
+        const propertyTypesData = await propertyTypesResponse.json();
+        setPropertyTypes(propertyTypesData);
 
-    fetch('https://api.example.com/properties')
-      .then(response => response.json())
-      .then(data => {
-        setProperties(data);
-        setFilteredProperties(data);
+        const propertiesResponse = await fetch('https://api.example.com/properties');
+        const propertiesData = await propertiesResponse.json();
+        setProperties(propertiesData);
+        setFilteredProperties(propertiesData);
         setLoading(false);
-      })
-      .catch(error => {
+      } catch (error) {
         setError(error);
         setLoading(false);
-      });
+      }
+    };
+
+    fetchData();
   }, []);
 
   const handleFilter = (price, propertyTitle, location, propertyType) => {
@@ -69,6 +71,36 @@ const Property = () => {
     setLocationPopupVisible(false);
   };
 
+  const renderLocationPopup = () => {
+    if (!selectedLocation || !isLocationPopupVisible) return null;
+
+    const isState = stateLocations.includes(selectedLocation);
+    const isCity = cityLocations.includes(selectedLocation);
+
+    return (
+      <div className="location-popup">
+        <h2>{selectedLocation}</h2>
+        <p>State: {isState ? selectedLocation : 'N/A'}</p>
+        <p>City: {isCity ? selectedLocation : 'N/A'}</p>
+        {isState && (
+          <div>
+            <h3>Cities</h3>
+            <ul>
+              {cityLocations
+                .filter(city => city.state === selectedLocation)
+                .map(city => (
+                  <li key={city.name}>
+                    {city.name} - {filteredProperties.filter(property => property.location === city.name).length} properties
+                  </li>
+                ))}
+            </ul>
+          </div>
+        )}
+        <button onClick={closeLocationPopup}>Close</button>
+      </div>
+    );
+  };
+
   return (
     <div className="App">
       <div className="filter-container">
@@ -94,32 +126,7 @@ const Property = () => {
           />
         </div>
       )}
-      {selectedLocation && isLocationPopupVisible && (
-        <div className="location-popup">
-          <h2>{selectedLocation}</h2>
-          <p>State: {stateLocations.includes(selectedLocation) ? selectedLocation : 'N/A'}</p>
-          <p>City: {cityLocations.includes(selectedLocation) ? selectedLocation : 'N/A'}</p>
-          {stateLocations.includes(selectedLocation) && (
-            <div>
-              <h3>Cities</h3>
-              <ul>
-                {cityLocations
-                  .filter(city => city.state === selectedLocation)
-                  .map(city => (
-                    <li key={city.name}>
-                      {city.name} -{' '}
-                      {
-                        filteredProperties.filter(property => property.location === city.name).length
-                      }{' '}
-                      properties
-                    </li>
-                  ))}
-              </ul>
-            </div>
-          )}
-          <button onClick={closeLocationPopup}>Close</button>
-        </div>
-      )}
+      {renderLocationPopup()}
     </div>
   );
 };

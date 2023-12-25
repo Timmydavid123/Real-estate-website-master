@@ -1,75 +1,91 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Webcam from 'react-webcam';
 import Dropzone from 'react-dropzone';
-import alike from 'image-alike';
-import Tesseract from 'tesseract.js';
+import * as faceapi from 'face-api.js';
 import './identification.css';
+
+// Tolerance threshold for face recognition
+const TOLERANCE_THRESHOLD = 5;
 
 const IdentificationPage = () => {
   const [idCardImage, setIdCardImage] = useState(null);
-  const [thumbImage, setThumbImage] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-  const webcamRef = React.useRef(null);
+  const webcamRef = useRef(null);
 
-  const captureThumb = () => {
-    const thumbImageSrc = webcamRef.current.getScreenshot();
-    setThumbImage(thumbImageSrc);
+  // Function to load Face API models
+  const loadFaceApiModels = async () => {
+    await faceapi.nets.tinyFaceDetector.loadFromUri('/models');
+    await faceapi.nets.faceLandmark68Net.loadFromUri('/models');
+    await faceapi.nets.faceRecognitionNet.loadFromUri('/models');
   };
 
-  const handleDrop = (acceptedFiles) => {
-    const thumbImageSrc = webcamRef.current.getScreenshot();
-    setThumbImage(thumbImageSrc);
+  useEffect(() => {
+    loadFaceApiModels();
+  }, []);
 
-    // Assuming only one file is allowed for ID card upload
+  // Function to capture face from the webcam
+  const captureFace = async () => {
+    if (!webcamRef.current) return;
+
+    const faceImageSrc = webcamRef.current.getScreenshot();
+
+    const faceCanvas = await faceapi.createCanvasFromMedia(faceImageSrc);
+    const detections = await faceapi.detectAllFaces(faceCanvas, new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks().withFaceDescriptors();
+
+    if (detections.length > 0) {
+      const faceDescriptor = detections[0].descriptor;
+
+      // You can add your face recognition logic here
+      // Compare face descriptor with other descriptors based on TOLERANCE_THRESHOLD
+
+      console.log('Face Descriptor:', faceDescriptor);
+
+      // Continue with the captured face image
+    } else {
+      toast.error('No face detected. Please try again.');
+    }
+  };
+
+  // Function to handle the ID card upload
+  const handleDrop = async (acceptedFiles) => {
     const idCardImageSrc = URL.createObjectURL(acceptedFiles[0]);
     setIdCardImage(idCardImageSrc);
 
-    // Perform image validation against a clear background
-    alike(thumbImageSrc, idCardImageSrc, { tolerance: 5 }, (result) => {
-      if (!result.match) {
-        toast.error('Please upload a valid ID card against a clear background.');
-        setIdCardImage(null);
-      }
-    });
+    setLoading(true);
+
+    // Perform face recognition against the captured face
+    await captureFace();
 
     // Perform OCR to check if the ID card contains valid text
-    Tesseract.recognize(
-      idCardImageSrc,
-      'eng',
-      { logger: (info) => console.log(info) }
-    ).then(({ data: { text } }) => {
-      if (!isValidIdCard(text)) {
-        toast.error('Invalid ID card format. Please upload a valid ID card.');
-        setIdCardImage(null);
-      }
-    });
+    // Add your OCR logic here
+
+    setLoading(false);
   };
 
-  const isValidIdCard = (text) => {
-    // Add your custom logic to check if the OCR result contains valid information based on your ID card format
-    // For example, you can check for specific keywords or patterns in the text.
-    // Return true if valid, false otherwise.
-    return true;
-  };
-
+  // Function to handle the form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (!thumbImage) {
-      toast.error('Please capture your face before submitting.');
-      return;
-    }
 
     if (!idCardImage) {
       toast.error('Please upload a valid ID card before submitting.');
       return;
     }
 
+    setLoading(true);
+
+    // Perform face recognition against the captured face
+    await captureFace();
+
+    // Perform OCR to check if the ID card contains valid text
+    // Add your OCR logic here
+
     // Include logic to send captured images and data to the backend
     // ...
 
+    setLoading(false);
     toast.success('Identification details submitted successfully!');
   };
 
@@ -77,7 +93,7 @@ const IdentificationPage = () => {
     <div className="identification-page">
       <h2>Means of Identification</h2>
 
-      {/* Webcam for Thumb Capture */}
+      {/* Webcam for Face Capture */}
       <label>
         Capturing:
         Please position your face correctly directly to the screen for capturing:
@@ -87,8 +103,7 @@ const IdentificationPage = () => {
           screenshotFormat="image/jpeg"
           style={{ width: 500, height: 200 }}
         />
-        <button onClick={captureThumb}>Capture</button>
-        {thumbImage && <img src={thumbImage} alt="Thumb Biometric" />}
+        <button onClick={captureFace}>Capture Face</button>
       </label>
 
       {/* Dropzone for ID Card Upload */}
@@ -106,8 +121,8 @@ const IdentificationPage = () => {
       </label>
 
       {/* Submit Button */}
-      <button type="submit" onClick={handleSubmit}>
-        Submit Identification
+      <button type="submit" onClick={handleSubmit} disabled={loading}>
+        {loading ? 'Submitting...' : 'Submit Identification'}
       </button>
 
       <ToastContainer />

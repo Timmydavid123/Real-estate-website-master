@@ -21,13 +21,21 @@ function PropertyList({ properties, loading, onLocationClick }) {
     <div className="property-list">
       {properties.map(property => (
         <div className="property-card" key={property.id}>
-          <img src={property.image_url} alt={property.title} />
-          <h2>{property.title}</h2>
-          <p>Price: {property.price}</p>
-          <p>Location: {property.location}</p>
-          <a href={`/property/${property.id}`} className="view-details">
-            View Details
-          </a>
+          <div className="property-image">
+            <img src={property.image_url} alt={property.title} />
+          </div>
+          <div className="property-details">
+            <div className="property-header">
+              <h2>{property.title}</h2>
+              {property.verified && <p className="verified-label">Verified</p>}
+            </div>
+            <p className="property-type">{property.property_type}</p>
+            <p className="property-address">{property.address}</p>
+            <p className="property-price">Price: {property.price}</p>
+            <a href={`/property/${property.id}`} className="view-details">
+              View Details
+            </a>
+          </div>
         </div>
       ))}
     </div>

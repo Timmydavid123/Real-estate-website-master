@@ -6,12 +6,22 @@ import SignatureCanvas from 'react-signature-canvas';
 import Select from 'react-select';
 import { states, Cities, LGAs } from '../data/Data';
 import './property.css';
+import Fingerprint2 from 'fingerprintjs2';
 
 
 const PropertyForm = () => {
   // Use useHistory instead of useNavigate
   const history = useHistory();
 
+  const getFingerprint = async () => {
+    return new Promise((resolve, reject) => {
+      Fingerprint2.get({}, (components) => {
+        const values = components.map((component) => component.value);
+        const fingerprint = Fingerprint2.x64hash128(values.join(''), 31);
+        resolve(fingerprint);
+      });
+    });
+  };
   const [formData, setFormData] = useState({
     fullName: '',
     emailAddress: '',
@@ -34,10 +44,21 @@ const PropertyForm = () => {
     guarantor2Email: '',
     guarantor2Phone: '',
     guarantor2Address: '',
+    propertyOwnerSignature: null,
     guarantor1Signature: null,
     guarantor2Signature: null,
   });
+  const [thumbprints, setThumbprints] = useState({
+    propertyOwnerThumb: null,
+    guarantor1Thumb: null,
+    guarantor2Thumb: null,
+  });
 
+  const isValidThumbprint = (data) => {
+    // Implement your thumbprint validation logic here
+    // For example, you can check the length of the data or use a library for thumbprint recognition
+    return data.length > 100; // Adjust this condition based on your thumbprint characteristics
+  };
 
   const [selectedState, setSelectedState] = useState(null);
   const [selectedCity, setSelectedCity] = useState(null);
@@ -86,6 +107,12 @@ const PropertyForm = () => {
       },
     }));
   };
+  const handlepropertyOwnerSignature = (data) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      guarantor1Signature: data,
+    }));
+  };
   const handleGuarantor1Signature = (data) => {
     setFormData((prevData) => ({
       ...prevData,
@@ -101,6 +128,120 @@ const PropertyForm = () => {
   };
 
 
+
+  const handlePropertyOwnerThumb = async (data) => {
+    try {
+      const fingerprint = await getFingerprint();
+      if (isValidThumbprint(fingerprint)) {
+        setThumbprints((prevThumbprints) => ({
+          ...prevThumbprints,
+          propertyOwnerThumb: fingerprint,
+        }));
+      } else {
+        toast.error('Invalid thumbprint. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error getting fingerprint:', error);
+      toast.error('Failed to get fingerprint. Please try again.');
+    }
+  };
+
+  const handleGuarantor1Thumb = async (data) => {
+    try {
+      const fingerprint = await getFingerprint();
+      if (isValidThumbprint(fingerprint)) {
+        setThumbprints((prevThumbprints) => ({
+          ...prevThumbprints,
+          guarantor1Thumb: fingerprint,
+        }));
+      } else {
+        toast.error('Invalid thumbprint. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error getting fingerprint:', error);
+      toast.error('Failed to get fingerprint. Please try again.');
+    }
+  };
+  
+  const handleGuarantor2Thumb = async (data) => {
+    try {
+      const fingerprint = await getFingerprint();
+      if (isValidThumbprint(fingerprint)) {
+        setThumbprints((prevThumbprints) => ({
+          ...prevThumbprints,
+          guarantor2Thumb: fingerprint,
+        }));
+      } else {
+        toast.error('Invalid thumbprint. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error getting fingerprint:', error);
+      toast.error('Failed to get fingerprint. Please try again.');
+    }
+  };
+  const handleResetPropertyOwner = () => {
+    setFormData((prevData) => ({
+      ...prevData,
+      fullName: '',
+      emailAddress: '',
+      phoneNumber: '',
+      propertyType: '',
+      propertyAmount: '',
+      propertyPictures: [],
+      propertyLocation: {
+        state: '',
+        city: '',
+        lga: '',
+      },
+      propertyAddress: '',
+      propertyCountry: '',
+      propertyOwnerSignature: null,
+    }));
+    setThumbprints((prevThumbprints) => ({
+      ...prevThumbprints,
+      propertyOwnerThumb: null,
+    }));
+  };
+
+  const handleResetGuarantor1 = () => {
+    setFormData((prevData) => ({
+      ...prevData,
+      guarantor1FullName: '',
+      guarantor1Email: '',
+      guarantor1Phone: '',
+      guarantor1Address: '',
+      guarantor1Signature: null,
+    }));
+    setThumbprints((prevThumbprints) => ({
+      ...prevThumbprints,
+      guarantor1Thumb: null,
+    }));
+  };
+
+  const handleResetGuarantor2 = () => {
+    setFormData((prevData) => ({
+      ...prevData,
+      guarantor2FullName: '',
+      guarantor2Email: '',
+      guarantor2Phone: '',
+      guarantor2Address: '',
+      guarantor2Signature: null,
+    }));
+    setThumbprints((prevThumbprints) => ({
+      ...prevThumbprints,
+      guarantor2Thumb: null,
+    }));
+  };
+
+
+  const propertyTypeOptions = [
+    { label: "Commercial Bulding", value: "Commercial Bulding" },
+    { label: "Residential Building", value: "Residential Building" },
+    { label: "Residential Land", value: "Residential Land" },
+    { label: "Commercial Land", value: "Commercial Land" },
+    { label: "Agricultural Land", value: "Agricultural Land" },
+  ];
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -115,14 +256,14 @@ const PropertyForm = () => {
       return;
     }
 
-    // Validate all fields are filled
-    const formFields = Object.values(formData).flat();
-    if (formFields.some((field) => !field)) {
-      toast.error('Please fill in all required fields.');
-      // Hide loader
-      setLoading(false);
-      return;
-    }
+    // // Validate all fields are filled
+    // const formFields = Object.values(formData).flat();
+    // if (formFields.some((field) => !field)) {
+    //   toast.error('Please fill in all required fields.');
+    //   // Hide loader
+    //   setLoading(false);
+    //   return;
+    // }
 
     try {
       // Send form data to backend
@@ -165,6 +306,7 @@ const PropertyForm = () => {
           name="fullName"
           value={formData.fullName}
           onChange={handleChange}
+          required
         />
       </label>
 
@@ -176,6 +318,7 @@ const PropertyForm = () => {
           name="emailAddress"
           value={formData.emailAddress}
           onChange={handleChange}
+          required
         />
       </label>
 
@@ -187,17 +330,22 @@ const PropertyForm = () => {
           name="phoneNumber"
           value={formData.phoneNumber}
           onChange={handleChange}
+          required
         />
       </label>
 
-      {/* Type of Property */}
-      <label>
+       {/* Type of Property */}
+       <label>
         Type of Property:
-        <input
-          type="text"
-          name="propertyType"
-          value={formData.propertyType}
-          onChange={handleChange}
+        <Select
+          value={propertyTypeOptions.find(option => option.value === formData.propertyType)}
+          onChange={(selectedOption) => setFormData((prevData) => ({
+            ...prevData,
+            propertyType: selectedOption.value,
+          }))}
+          options={propertyTypeOptions}
+          placeholder="Select Property Type"
+          required
         />
       </label>
 
@@ -210,6 +358,7 @@ const PropertyForm = () => {
           placeholder="₦"
           value={formData.propertyAmount}
           onChange={handleChange}
+          required
         />
       </label>
 
@@ -239,6 +388,7 @@ const PropertyForm = () => {
           name="propertyLocation.address"
           value={formData.propertyLocation.address}
           onChange={handleChange}
+          required
         ></textarea>
       </label>
 
@@ -251,6 +401,7 @@ const PropertyForm = () => {
             onChange={handleCityChange}
             options={Cities}
             placeholder="Select City"
+            required
           />
         </div>
       </label>
@@ -264,6 +415,7 @@ const PropertyForm = () => {
             onChange={handleLGAChange}
             options={LGAs}
             placeholder="Select LGA"
+            required
           />
         </div>
       </label>
@@ -277,6 +429,7 @@ const PropertyForm = () => {
             onChange={handleStateChange}
             options={states}
             placeholder="Select State"
+            required
           />
         </div>
       </label>
@@ -289,8 +442,35 @@ const PropertyForm = () => {
           name="propertyCountry"
           value={formData.propertyCountry}
           onChange={handleChange}
+          required
         />
       </label>
+
+      <label>
+        <h5 className="small-text">Please sign on the blank space below</h5>
+        Signature:
+        <SignatureCanvas
+          penColor="black"
+          canvasProps={{ width: 400, height: 200, className: 'signature-canvas' }}
+          onEnd={(data) => handlepropertyOwnerSignature(data)}
+          required
+        />
+      </label>
+
+      {/* Property Owner Thumbprint */}
+      <label>
+      <h5 className="small-text">Please place your thumb on the blank space below</h5>
+        Thumbprint:
+        <SignatureCanvas
+          penColor="black"
+          canvasProps={{ width: 400, height: 200, className: 'thumbprint-canvas' }}
+          onEnd={(data) => handlePropertyOwnerThumb(data)}
+          required
+        />
+      </label>  
+      <button type="button" onClick={handleResetPropertyOwner}>
+        Reset Property Owner Form
+      </button>
 
       <h2>Guarantor 1 Information</h2>
 
@@ -302,6 +482,7 @@ const PropertyForm = () => {
           name="guarantor1FullName"
           value={formData.guarantor1FullName}
           onChange={handleChange}
+          required
         />
       </label>
 
@@ -313,6 +494,7 @@ const PropertyForm = () => {
           name="guarantor1Email"
           value={formData.guarantor1Email}
           onChange={handleChange}
+          required
         />
       </label>
 
@@ -324,6 +506,7 @@ const PropertyForm = () => {
           name="guarantor1Phone"
           value={formData.guarantor1Phone}
           onChange={handleChange}
+          required
         />
       </label>
 
@@ -334,16 +517,35 @@ const PropertyForm = () => {
           name="guarantor1Address"
           value={formData.guarantor1Address}
           onChange={handleChange}
+          required
         ></textarea>
       </label>
       <label>
+      <h5 className="small-text">Please sign on the blank space below</h5>
         Signature:
         <SignatureCanvas
           penColor="black"
           canvasProps={{ width: 400, height: 200, className: 'signature-canvas' }}
           onEnd={(data) => handleGuarantor1Signature(data)}
+          required
         />
       </label>
+
+        {/* Guarantor 1 Thumbprint */}
+        <label>
+          Thumbprint:
+          <h5 className="small-text">Please place your thumb on the blank space below</h5>
+          <SignatureCanvas
+            penColor="black"
+            canvasProps={{ width: 400, height: 200, className: 'thumbprint-canvas' }}
+            onEnd={(data) => handleGuarantor1Thumb(data)}
+            required
+          />
+        </label>
+
+      <button type="button" onClick={handleResetGuarantor1}>
+        Reset Guarantor 1 Form
+      </button>
 
       <h2>Guarantor 2 Information</h2>
 
@@ -355,6 +557,7 @@ const PropertyForm = () => {
           name="guarantor2FullName"
           value={formData.guarantor2FullName}
           onChange={handleChange}
+          required
         />
       </label>
 
@@ -366,6 +569,7 @@ const PropertyForm = () => {
           name="guarantor2Email"
           value={formData.guarantor2Email}
           onChange={handleChange}
+          required
         />
       </label>
 
@@ -377,6 +581,7 @@ const PropertyForm = () => {
           name="guarantor2Phone"
           value={formData.guarantor2Phone}
           onChange={handleChange}
+          required
         />
       </label>
 
@@ -387,19 +592,37 @@ const PropertyForm = () => {
           name="guarantor2Address"
           value={formData.guarantor2Address}
           onChange={handleChange}
+          required
         ></textarea>
       </label>
       <label>
+      <h5 className="small-text">Please sign on the blank space below</h5>
         Signature:
         <SignatureCanvas
           penColor="black"
           canvasProps={{ width: 400, height: 200, className: 'signature-canvas' }}
           onEnd={(data) => handleGuarantor2Signature(data)}
+          required
         />
       </label>
+        {/* Guarantor 2 Thumbprint */}
+        <label >
+        <h5 className="small-text">Please place you thumb on the blank space below</h5>
+          Thumbprint:
+          <SignatureCanvas
+            penColor="black"
+            canvasProps={{ width: 400, height: 200, className: 'thumbprint-canvas' }}
+            onEnd={(data) => handleGuarantor2Thumb(data)}
+            required
+          />
+        </label>
+
+        <button type="button" onClick={handleResetGuarantor2}>
+        Reset Guarantor 2 Form
+      </button>
 
       {/* Submit Button */}
-      <button type="submit">Submit</button>
+      <button type="subt">Submit</button>
       {loading && <div className="loader"></div>}
       <ToastContainer />
     </form>

@@ -12,6 +12,7 @@ import ChangePassword from "../../Auth/change-password/change-pass"
 import Property from "../homepage/homepage/homepae"
 import PropertyForm from "../form/property"
 import IdentificationPage from "../identification/identification"
+import Chat from "../chat/chat"
 
 
 const Pages = () => {
@@ -35,7 +36,8 @@ const Pages = () => {
         <Route exact path="/change-password" component={ChangePassword} />
         <Route exact path="/Property" component={Property} />
         <Route exact path="/propertyupload" component={PropertyForm} />
-        <Route path="/identification" exact component={IdentificationPage} />
+        <Route exact path="/identification" component={IdentificationPage} />
+        <Route exact path="/chat" component={Chat} />
       </Switch>
     </Router>
   );  
