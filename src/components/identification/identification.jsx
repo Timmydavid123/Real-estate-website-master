@@ -12,6 +12,7 @@ const TOLERANCE_THRESHOLD = 5;
 const IdentificationPage = () => {
   const [idCardImage, setIdCardImage] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [isWebcamReady, setWebcamReady] = useState(false);
 
   const webcamRef = useRef(null);
 
@@ -30,10 +31,19 @@ const IdentificationPage = () => {
   const captureFace = async () => {
     if (!webcamRef.current) return;
 
+    // Wait for the webcam to be ready
+    if (!isWebcamReady) {
+      toast.error('Webcam is not ready. Please try again.');
+      return;
+    }
+
     const faceImageSrc = webcamRef.current.getScreenshot();
 
     const faceCanvas = await faceapi.createCanvasFromMedia(faceImageSrc);
-    const detections = await faceapi.detectAllFaces(faceCanvas, new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks().withFaceDescriptors();
+    const detections = await faceapi
+      .detectAllFaces(faceCanvas, new faceapi.TinyFaceDetectorOptions())
+      .withFaceLandmarks()
+      .withFaceDescriptors();
 
     if (detections.length > 0) {
       const faceDescriptor = detections[0].descriptor;
@@ -89,6 +99,11 @@ const IdentificationPage = () => {
     toast.success('Identification details submitted successfully!');
   };
 
+  // Callback function when the webcam is successfully loaded
+  const handleWebcamUserMedia = () => {
+    setWebcamReady(true);
+  };
+
   return (
     <div className="identification-page">
       <h2>Means of Identification</h2>
@@ -102,6 +117,7 @@ const IdentificationPage = () => {
           ref={webcamRef}
           screenshotFormat="image/jpeg"
           style={{ width: 500, height: 200 }}
+          onUserMedia={handleWebcamUserMedia}
         />
         <button onClick={captureFace}>Capture Face</button>
       </label>
