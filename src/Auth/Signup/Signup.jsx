@@ -1,8 +1,12 @@
 import React, { useState } from "react";
+import { useHistory } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import axios from 'axios';
 import './Signup.css';
 
 const SignupPage = () => {
+  const history = useHistory();
+
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -50,27 +54,40 @@ const SignupPage = () => {
       setLoading(true);
 
       // Send signup request to the backend (send OTP)
-      const response = await fetch('https://backendweb-0kwi.onrender.com/signup', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ fullName, email, password }),
+      const response = await axios.post('https://backendweb-0kwi.onrender.com/api/signup', {
+        fullName,
+        email,
+        password,
+        confirmPassword,
+        agreed,
       });
 
-      if (!response.ok) {
+      console.log('Received signup response:', response);
+
+      if (response.status !== 201) {
         // Handle unsuccessful signup
-        const responseData = await response.json();
-        setError(responseData.message || 'Signup failed');
+        console.error('Signup failed:', response.data.message);
+        setError(response.data.message || 'Signup failed');
         setLoading(false);
         return;
       }
 
       // Signup successful, handle OTP logic or redirect
       console.log('Signup successful');
+
+      // Redirect to the OTP page
+      history.push('/otp');
+
     } catch (error) {
       console.error('Error during signup:', error);
-      setError('An error occurred during signup');
+
+      // Check if the error is an AxiosError with a response
+      if (axios.isAxiosError(error) && error.response) {
+        setError(error.response.data.message || 'Signup failed');
+      } else {
+        setError('An error occurred during signup. Please check the console for details.');
+      }
+
     } finally {
       setLoading(false);
     }
@@ -91,9 +108,10 @@ const SignupPage = () => {
                       type="text"
                       id="form3Example1cg"
                       placeholder="Full Name"
-                      className="form-control form-control-lg text-white"
+                      className="form-control form-control-lg text-dark"
                       value={fullName}
                       onChange={handleFullNameChange}
+                      required
                     />
                     <label className="form-label text-white" htmlFor="form3Example1cg"></label>
                   </div>
@@ -103,9 +121,10 @@ const SignupPage = () => {
                       type="email"
                       id="form3Example3cg"
                       placeholder="Email"
-                      className="form-control form-control-lg text-white"
+                      className="form-control form-control-lg text-dark"
                       value={email}
                       onChange={handleEmailChange}
+                      required
                     />
                     <label className="form-label text-white" htmlFor="form3Example3cg"></label>
                   </div>
@@ -118,6 +137,7 @@ const SignupPage = () => {
                       className="form-control form-control-lg "
                       value={password}
                       onChange={handlePasswordChange}
+                      required
                     />
                     <label className="form-label text-white" htmlFor="form3Example4cg"></label>
                   </div>
@@ -130,6 +150,7 @@ const SignupPage = () => {
                       className="form-control form-control-lg"
                       value={confirmPassword}
                       onChange={handleConfirmPasswordChange}
+                      required
                     />
                     <label className="form-label text-white" htmlFor="form3Example4cdg"></label>
                   </div>
@@ -139,11 +160,12 @@ const SignupPage = () => {
                       className="form-check-input me-2"
                       type="checkbox"
                       value=""
-                      id="form2Example3cg"
+                      id="form3Example3cg"
                       checked={agreed}
                       onChange={handleAgreementChange}
+                      required
                     />
-                    <label className="form-check-label text-white" htmlFor="form2Example3g">
+                    <label className="form-check-label text-white" htmlFor="form3Example3cg">
                       I agree all statements in <a href="#!" className="text-white"><u>Terms of service</u></a>
                     </label>
                   </div>
@@ -159,10 +181,17 @@ const SignupPage = () => {
                           <span className="visually-hidden">Loading...</span>
                         </div>
                       ) : (
-                        'Register'
+                        'Sign Up'
                       )}
                     </button>
                   </div>
+
+                  {/* Display error message */}
+                  {error && (
+                    <div className="alert alert-danger mt-3" role="alert">
+                      {error}
+                    </div>
+                  )}
 
                   <p className="text-center text-white mt-5 mb-0">Have already an account? <a href="/login" className="fw-bold text-white"><u>Login here</u></a></p>
                 </div>

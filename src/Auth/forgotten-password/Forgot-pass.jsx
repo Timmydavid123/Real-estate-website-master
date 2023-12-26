@@ -47,7 +47,7 @@ const ForgotPassword = () => {
     } catch (error) {
       console.error('Error during reset password:', error);
       setError('An error occurred during the request');
-    } finally {
+    }finally {
       setLoading(false);
     }
   };

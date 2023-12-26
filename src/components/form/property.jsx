@@ -16,9 +16,7 @@ const PropertyForm = () => {
   const getFingerprint = async () => {
     return new Promise((resolve, reject) => {
       Fingerprint2.get({}, (components) => {
-        const values = components.map((component) => component.value);
-        const fingerprint = Fingerprint2.x64hash128(values.join(''), 31);
-        resolve(fingerprint);
+        resolve(components);
       });
     });
   };
@@ -54,11 +52,11 @@ const PropertyForm = () => {
     guarantor2Thumb: null,
   });
 
-  const isValidThumbprint = (data) => {
-    // Implement your thumbprint validation logic here
-    // For example, you can check the length of the data or use a library for thumbprint recognition
-    return data.length > 100; // Adjust this condition based on your thumbprint characteristics
-  };
+  // const isValidThumbprint = (data) => {
+  //   // Implement your thumbprint validation logic here
+  //   // For example, you can check the length of the data or use a library for thumbprint recognition
+  //   return data.length > 100; // Adjust this condition based on your thumbprint characteristics
+  // };
 
   const [selectedState, setSelectedState] = useState(null);
   const [selectedCity, setSelectedCity] = useState(null);
@@ -132,31 +130,22 @@ const PropertyForm = () => {
   const handlePropertyOwnerThumb = async (data) => {
     try {
       const fingerprint = await getFingerprint();
-      if (isValidThumbprint(fingerprint)) {
-        setThumbprints((prevThumbprints) => ({
-          ...prevThumbprints,
-          propertyOwnerThumb: fingerprint,
-        }));
-      } else {
-        toast.error('Invalid thumbprint. Please try again.');
-      }
+      setThumbprints((prevThumbprints) => ({
+        ...prevThumbprints,
+        propertyOwnerThumb: fingerprint,
+      }));
     } catch (error) {
       console.error('Error getting fingerprint:', error);
       toast.error('Failed to get fingerprint. Please try again.');
     }
   };
-
   const handleGuarantor1Thumb = async (data) => {
     try {
       const fingerprint = await getFingerprint();
-      if (isValidThumbprint(fingerprint)) {
-        setThumbprints((prevThumbprints) => ({
-          ...prevThumbprints,
-          guarantor1Thumb: fingerprint,
-        }));
-      } else {
-        toast.error('Invalid thumbprint. Please try again.');
-      }
+      setThumbprints((prevThumbprints) => ({
+        ...prevThumbprints,
+        guarantor1Thumb: fingerprint,
+      }));
     } catch (error) {
       console.error('Error getting fingerprint:', error);
       toast.error('Failed to get fingerprint. Please try again.');
@@ -166,72 +155,18 @@ const PropertyForm = () => {
   const handleGuarantor2Thumb = async (data) => {
     try {
       const fingerprint = await getFingerprint();
-      if (isValidThumbprint(fingerprint)) {
-        setThumbprints((prevThumbprints) => ({
-          ...prevThumbprints,
-          guarantor2Thumb: fingerprint,
-        }));
-      } else {
-        toast.error('Invalid thumbprint. Please try again.');
-      }
+      setThumbprints((prevThumbprints) => ({
+        ...prevThumbprints,
+        guarantor2Thumb: fingerprint,
+      }));
     } catch (error) {
       console.error('Error getting fingerprint:', error);
       toast.error('Failed to get fingerprint. Please try again.');
     }
   };
-  const handleResetPropertyOwner = () => {
-    setFormData((prevData) => ({
-      ...prevData,
-      fullName: '',
-      emailAddress: '',
-      phoneNumber: '',
-      propertyType: '',
-      propertyAmount: '',
-      propertyPictures: [],
-      propertyLocation: {
-        state: '',
-        city: '',
-        lga: '',
-      },
-      propertyAddress: '',
-      propertyCountry: '',
-      propertyOwnerSignature: null,
-    }));
-    setThumbprints((prevThumbprints) => ({
-      ...prevThumbprints,
-      propertyOwnerThumb: null,
-    }));
-  };
 
-  const handleResetGuarantor1 = () => {
-    setFormData((prevData) => ({
-      ...prevData,
-      guarantor1FullName: '',
-      guarantor1Email: '',
-      guarantor1Phone: '',
-      guarantor1Address: '',
-      guarantor1Signature: null,
-    }));
-    setThumbprints((prevThumbprints) => ({
-      ...prevThumbprints,
-      guarantor1Thumb: null,
-    }));
-  };
 
-  const handleResetGuarantor2 = () => {
-    setFormData((prevData) => ({
-      ...prevData,
-      guarantor2FullName: '',
-      guarantor2Email: '',
-      guarantor2Phone: '',
-      guarantor2Address: '',
-      guarantor2Signature: null,
-    }));
-    setThumbprints((prevThumbprints) => ({
-      ...prevThumbprints,
-      guarantor2Thumb: null,
-    }));
-  };
+
 
 
   const propertyTypeOptions = [
@@ -256,14 +191,6 @@ const PropertyForm = () => {
       return;
     }
 
-    // // Validate all fields are filled
-    // const formFields = Object.values(formData).flat();
-    // if (formFields.some((field) => !field)) {
-    //   toast.error('Please fill in all required fields.');
-    //   // Hide loader
-    //   setLoading(false);
-    //   return;
-    // }
 
     try {
       // Send form data to backend
@@ -459,18 +386,15 @@ const PropertyForm = () => {
 
       {/* Property Owner Thumbprint */}
       <label>
-      <h5 className="small-text">Please place your thumb on the blank space below</h5>
+        <h5 className="small-text">Please place your thumb on the blank space below</h5>
         Thumbprint:
         <SignatureCanvas
           penColor="black"
-          canvasProps={{ width: 400, height: 200, className: 'thumbprint-canvas' }}
+          canvasProps={{ width: '100%', height: '100%', className: 'thumbprint-canvas' }}
           onEnd={(data) => handlePropertyOwnerThumb(data)}
           required
         />
-      </label>  
-      <button type="button" onClick={handleResetPropertyOwner}>
-        Reset Property Owner Form
-      </button>
+      </label> 
 
       <h2>Guarantor 1 Information</h2>
 
@@ -537,15 +461,12 @@ const PropertyForm = () => {
           <h5 className="small-text">Please place your thumb on the blank space below</h5>
           <SignatureCanvas
             penColor="black"
-            canvasProps={{ width: 400, height: 200, className: 'thumbprint-canvas' }}
+            canvasProps={{ width: '100%', height: '100%', className: 'thumbprint-canvas' }}
             onEnd={(data) => handleGuarantor1Thumb(data)}
             required
           />
         </label>
 
-      <button type="button" onClick={handleResetGuarantor1}>
-        Reset Guarantor 1 Form
-      </button>
 
       <h2>Guarantor 2 Information</h2>
 
@@ -611,15 +532,11 @@ const PropertyForm = () => {
           Thumbprint:
           <SignatureCanvas
             penColor="black"
-            canvasProps={{ width: 400, height: 200, className: 'thumbprint-canvas' }}
+            canvasProps={{ width: '100%', height: '100%', className: 'thumbprint-canvas' }}
             onEnd={(data) => handleGuarantor2Thumb(data)}
             required
           />
         </label>
-
-        <button type="button" onClick={handleResetGuarantor2}>
-        Reset Guarantor 2 Form
-      </button>
 
       {/* Submit Button */}
       <button type="subt">Submit</button>

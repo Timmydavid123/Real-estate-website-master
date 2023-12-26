@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { useHistory } from "react-router-dom";
 import './login.css';
 
 const LoginPage = () => {
+  const history = useHistory();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -30,7 +32,7 @@ const LoginPage = () => {
       setLoading(true);
 
       // Send login request to the backend
-      const response = await fetch('https://backendweb-0kwi.onrender.com/login', {
+      const response = await fetch('https://backendweb-0kwi.onrender.com/api/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -48,6 +50,9 @@ const LoginPage = () => {
 
       // Login successful, you can redirect or perform other actions here
       console.log('Login successful');
+      // Login successful, redirect to the property page
+      history.push('/property');
+      
     } catch (error) {
       console.error('Error during login:', error);
       setError('An error occurred during login');
