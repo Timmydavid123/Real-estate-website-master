@@ -88,3 +88,42 @@
 .error-message {
   color: #dc3545; /* Bootstrap danger color */
 }
+
+/* Media query for mobile devices */
+@media (max-width: 767px) {
+  .filter-content {
+    padding: 10px; /* Adjust padding for smaller screens */
+  }
+
+  .unique-filter-location,
+  .filter-actions {
+    padding: 10px; /* Adjust padding for smaller screens */
+  }
+
+  .unique-filter-location-heading,
+  .unique-filter-current-location {
+    font-size: 16px; /* Adjust font size for smaller screens */
+  }
+
+  .location-popup {
+    padding: 10px; /* Adjust padding for smaller screens */
+  }
+
+  .location-popup h2 {
+    font-size: 20px; /* Adjust font size for smaller screens */
+  }
+
+  .location-popup p {
+    font-size: 14px; /* Adjust font size for smaller screens */
+  }
+
+  .location-popup li {
+    font-size: 12px; /* Adjust font size for smaller screens */
+  }
+
+  .loading-message,
+  .error-message {
+    font-size: 16px; /* Adjust font size for smaller screens */
+    margin-top: 10px; /* Adjust margin for smaller screens */
+  }
+}

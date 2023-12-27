@@ -1,23 +1,88 @@
-/* identification.css */
+.identification-page {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  text-align: center;
+}
+
+.identification-section {
+  border: 1px solid #ddd;
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.webcam-container {
+  margin-bottom: 20px;
+}
+
+.webcam-label {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.capture-btn {
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 40px;
+}
+
+.captured-face-container {
+  margin-top: 20px;
+}
+
+.captured-face-label {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.captured-face-image {
+  max-width: 100%;
+  height: auto;
+} 
+
+.dropzone-container {
+  margin-top: 20px;
+}
+
+.dropzone-label {
+  display: block;
+  margin-bottom: 10px;
+}
+
 .dropzone {
-    border: 2px dashed #ccc;
-    border-radius: 8px;
-    padding: 20px;
-    text-align: center;
-    cursor: pointer;
-  }
-  
-  .dropzone p {
-    margin: 0;
-  }
-  
-  .identification-page {
-    max-width: 600px;
-    margin: 0 auto;
-  }
-  
-  .identification-page img {
-    max-width: 100%;
-    margin-top: 10px;
-  }
-  
+  border: 2px dashed #ccc;
+  padding: 20px;
+  cursor: pointer;
+}
+
+.id-card-image {
+  max-width: 100%;
+  height: auto;
+  margin-top: 10px;
+}
+
+.submit-btn {
+  background-color: #2196f3;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 20px;
+}
+
+.error-msg {
+  color: red;
+  margin-top: 10px;
+}
+
+h2, h3 {
+  color: #333;
+}
+

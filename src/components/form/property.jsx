@@ -6,20 +6,12 @@ import SignatureCanvas from 'react-signature-canvas';
 import Select from 'react-select';
 import { states, Cities, LGAs } from '../data/Data';
 import './property.css';
-import Fingerprint2 from 'fingerprintjs2';
 
 
 const PropertyForm = () => {
   // Use useHistory instead of useNavigate
   const history = useHistory();
 
-  const getFingerprint = async () => {
-    return new Promise((resolve, reject) => {
-      Fingerprint2.get({}, (components) => {
-        resolve(components);
-      });
-    });
-  };
   const [formData, setFormData] = useState({
     fullName: '',
     emailAddress: '',
@@ -46,17 +38,6 @@ const PropertyForm = () => {
     guarantor1Signature: null,
     guarantor2Signature: null,
   });
-  const [thumbprints, setThumbprints] = useState({
-    propertyOwnerThumb: null,
-    guarantor1Thumb: null,
-    guarantor2Thumb: null,
-  });
-
-  // const isValidThumbprint = (data) => {
-  //   // Implement your thumbprint validation logic here
-  //   // For example, you can check the length of the data or use a library for thumbprint recognition
-  //   return data.length > 100; // Adjust this condition based on your thumbprint characteristics
-  // };
 
   const [selectedState, setSelectedState] = useState(null);
   const [selectedCity, setSelectedCity] = useState(null);
@@ -124,49 +105,6 @@ const PropertyForm = () => {
       guarantor2Signature: data,
     }));
   };
-
-
-
-  const handlePropertyOwnerThumb = async (data) => {
-    try {
-      const fingerprint = await getFingerprint();
-      setThumbprints((prevThumbprints) => ({
-        ...prevThumbprints,
-        propertyOwnerThumb: fingerprint,
-      }));
-    } catch (error) {
-      console.error('Error getting fingerprint:', error);
-      toast.error('Failed to get fingerprint. Please try again.');
-    }
-  };
-  const handleGuarantor1Thumb = async (data) => {
-    try {
-      const fingerprint = await getFingerprint();
-      setThumbprints((prevThumbprints) => ({
-        ...prevThumbprints,
-        guarantor1Thumb: fingerprint,
-      }));
-    } catch (error) {
-      console.error('Error getting fingerprint:', error);
-      toast.error('Failed to get fingerprint. Please try again.');
-    }
-  };
-  
-  const handleGuarantor2Thumb = async (data) => {
-    try {
-      const fingerprint = await getFingerprint();
-      setThumbprints((prevThumbprints) => ({
-        ...prevThumbprints,
-        guarantor2Thumb: fingerprint,
-      }));
-    } catch (error) {
-      console.error('Error getting fingerprint:', error);
-      toast.error('Failed to get fingerprint. Please try again.');
-    }
-  };
-
-
-
 
 
   const propertyTypeOptions = [
@@ -384,18 +322,6 @@ const PropertyForm = () => {
         />
       </label>
 
-      {/* Property Owner Thumbprint */}
-      <label>
-        <h5 className="small-text">Please place your thumb on the blank space below</h5>
-        Thumbprint:
-        <SignatureCanvas
-          penColor="black"
-          canvasProps={{ width: '100%', height: '100%', className: 'thumbprint-canvas' }}
-          onEnd={(data) => handlePropertyOwnerThumb(data)}
-          required
-        />
-      </label> 
-
       <h2>Guarantor 1 Information</h2>
 
       {/* Guarantor 1 Full Name */}
@@ -454,20 +380,6 @@ const PropertyForm = () => {
           required
         />
       </label>
-
-        {/* Guarantor 1 Thumbprint */}
-        <label>
-          Thumbprint:
-          <h5 className="small-text">Please place your thumb on the blank space below</h5>
-          <SignatureCanvas
-            penColor="black"
-            canvasProps={{ width: '100%', height: '100%', className: 'thumbprint-canvas' }}
-            onEnd={(data) => handleGuarantor1Thumb(data)}
-            required
-          />
-        </label>
-
-
       <h2>Guarantor 2 Information</h2>
 
       {/* Guarantor 2 Full Name */}
@@ -526,17 +438,6 @@ const PropertyForm = () => {
           required
         />
       </label>
-        {/* Guarantor 2 Thumbprint */}
-        <label >
-        <h5 className="small-text">Please place you thumb on the blank space below</h5>
-          Thumbprint:
-          <SignatureCanvas
-            penColor="black"
-            canvasProps={{ width: '100%', height: '100%', className: 'thumbprint-canvas' }}
-            onEnd={(data) => handleGuarantor2Thumb(data)}
-            required
-          />
-        </label>
 
       {/* Submit Button */}
       <button type="subt">Submit</button>

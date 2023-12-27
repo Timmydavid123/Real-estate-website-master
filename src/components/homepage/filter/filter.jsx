@@ -5,7 +5,7 @@ import { Card } from 'react-bootstrap';
 import '@fortawesome/fontawesome-free/css/all.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './filter.css';
-import { states, Cities } from '../../data/Data';
+import { states, cities } from '../../data/Data';
 
 const Filter = ({ onFilter, stateLocations, cityLocations, onLocationClick }) => {
   const [location, setLocation] = useState('All Nigeria');
@@ -44,7 +44,7 @@ const Filter = ({ onFilter, stateLocations, cityLocations, onLocationClick }) =>
             {/* Categories */}
             <article className="filter-group">
               <header className="card-header">
-                  <a href="#" data-toggle="collapse" data-target="#collapse_1" aria-expanded="true" className="">
+                  <a href="*#" data-toggle="collapse" data-target="#collapse_1" aria-expanded="true" className="">
                     <i className="icon-control fa fa-chevron-down"></i>
                     <h6 className="title">Categories</h6>
                   </a>
@@ -154,9 +154,9 @@ const Filter = ({ onFilter, stateLocations, cityLocations, onLocationClick }) =>
                 <option>Lowest Price</option>
               </select>
               <div className="btn-group">
-                <a href="#" className="btn btn-outline-secondary" data-toggle="tooltip" title="" data-original-title="List view">
+                <a href="*#" className="btn btn-outline-secondary" data-toggle="tooltip" title="" data-original-title="List view">
                   <i className="fa fa-bars"></i></a>
-                <a href="#" className="btn btn-outline-secondary active" data-toggle="tooltip" title="" data-original-title="Grid view">
+                <a href="*#" className="btn btn-outline-secondary active" data-toggle="tooltip" title="" data-original-title="Grid view">
                   <i className="fa fa-th"></i></a>
               </div>
             </div>

@@ -6,6 +6,7 @@ import Pagination from '../pagination/pagination';
 import { states, Cities } from '../../data/Data';
 
 const Property = () => {
+  const [isLoggedIn, setLoggedIn] = useState(false); // Add this line
   const [propertyTypes, setPropertyTypes] = useState([]);
   const [stateLocations, setStateLocations] = useState(states);
   const [cityLocations, setCityLocations] = useState(Cities);
@@ -64,16 +65,28 @@ const Property = () => {
   const handleLocationClick = location => {
     setSelectedLocation(location);
     setLocationPopupVisible(true);
+  
+    // Filter properties based on the selected state
+    const filtered = properties.filter(property => {
+      return property.location === location;
+    });
+  
+    setFilteredProperties(filtered);
+    setCurrentPage(1);
   };
-
+  
   const closeLocationPopup = () => {
     setSelectedLocation('');
     setLocationPopupVisible(false);
   };
+  const handleLogout = () => {
+    // Perform any necessary logout actions
+    setLoggedIn(false);
+  };
 
   const renderLocationPopup = () => {
     if (!selectedLocation || !isLocationPopupVisible) return null;
-
+  
     const isState = stateLocations.includes(selectedLocation);
     const isCity = cityLocations.includes(selectedLocation);
 
@@ -102,7 +115,17 @@ const Property = () => {
   };
 
   return (
-    <div className="App">
+<div className="App">
+      <div className="top-bar">
+        {/* <div className="logo-container">
+          <img src="../images/logo.png" alt="Logo" className="logo" />
+        </div> */}
+        <button className="top-button">Settings</button>
+        {isLoggedIn && <button className="top-button" onClick={handleLogout}>Logout</button>}
+        <button className="top-button">Buy</button>
+      </div>
+
+
       <div className="filter-container">
         <Filter
           onFilter={handleFilter}
@@ -113,6 +136,7 @@ const Property = () => {
           filteredProperties={filteredProperties}
         />
       </div>
+
       {loading && <p className="loading-message">Loading properties...</p>}
       {error && <p className="error-message">Error loading properties. Please try again later.</p>}
       {!loading && !error && (
