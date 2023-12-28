@@ -271,28 +271,26 @@ const PropertyForm = () => {
         />
       </label>
 
-        {/* Picture of Properties (Camera Supported) */}
-        <label>
-          Pictures of Properties:
-          <input
-            type="file"
-            accept="image/*"
-            capture="environment"
-            name="propertyPictures"
-            onChange={handleChange}
-            multiple // Allow multiple file selection
-            required // Make it required
+      {/* Picture of Properties (Camera Supported) */}
+      <label>
+        Pictures of Properties:
+        <input
+          type="file"
+          accept="image/*"
+          capture="user"
+          name="propertyPictures"
+          onChange={handleChange}
+          required // Make it required
+        />
+        {/* Show uploaded pictures */}
+        {imagePreviews.length > 0 && (
+          <img
+            src={imagePreviews[0]} // Only display the first image (the one snapped)
+            alt={`Property 0`}
+            style={{ maxWidth: '150px', maxHeight: '150px', margin: '5px' }}
           />
-          {/* Show uploaded pictures */}
-          {imagePreviews.map((preview, index) => (
-            <img
-              key={index}
-              src={preview}
-              alt={`Property ${index}`}
-              style={{ maxWidth: '150px', maxHeight: '150px', margin: '5px' }}
-            />
-          ))}
-        </label>
+        )}
+      </label>
 
       {/* Property Address */}
       <label>
