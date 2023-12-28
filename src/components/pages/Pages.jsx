@@ -13,7 +13,8 @@ import Property from "../homepage/homepage/homepae"
 import PropertyForm from "../form/property"
 import IdentificationPage from "../identification/identification"
 import Chat from "../chat/chat"
-
+import AdminLogin from "../admindashboard/AdminLogin"
+import AdminDashboard from "../admindashboard/AdminDashboard"
 
 const Pages = () => {
   return (
@@ -38,6 +39,8 @@ const Pages = () => {
         <Route exact path="/propertyupload" component={PropertyForm} />
         <Route exact path="/identification" component={IdentificationPage} />
         <Route exact path="/chat" component={Chat} />
+        <Route exact path="/admin" component={AdminLogin} />
+        <Route exact path="/admin/dashboard" component={AdminDashboard} />
       </Switch>
     </Router>
   );  

@@ -54,28 +54,29 @@ const PropertyForm = () => {
     if (name === 'propertyPictures') {
       const files = e.target.files;
 
-      if (files) {
-        const picturePreviews = [];
-
-        for (const file of files) {
-          const dataUrl = await readFileAsync(file);
-          picturePreviews.push(dataUrl);
+        if (files) {
+          const picturePreviews = [];
+  
+          for (const file of files) {
+            const dataUrl = await readFileAsync(file);
+            picturePreviews.push(dataUrl);
+          }
+  
+          setFormData((prevData) => ({
+            ...prevData,
+            propertyPictures: files, // Keep the files for backend upload
+          }));
+  
+          setImagePreviews(picturePreviews);
         }
-
+      } else {
         setFormData((prevData) => ({
           ...prevData,
-          propertyPictures: files,
+          [name]: type === 'file' ? e.target.files : e.target.value,
         }));
-
-        setImagePreviews(picturePreviews);
       }
-    } else {
-      setFormData((prevData) => ({
-        ...prevData,
-        [name]: type === 'file' ? e.target.files : e.target.value,
-      }));
-    }
-  };
+    };
+  
 
   const readFileAsync = (file) => {
     return new Promise((resolve, reject) => {
@@ -172,12 +173,21 @@ const PropertyForm = () => {
 
     try {
       // Send form data to backend
+      const formDataToSend = new FormData();
+      Object.entries(formData).forEach(([key, value]) => {
+        // If it's an array of files, append each file separately
+        if (Array.isArray(value) && value[0] instanceof File) {
+          value.forEach((file, index) => {
+            formDataToSend.append(`${key}_${index}`, file);
+          });
+        } else {
+          formDataToSend.append(key, value);
+        }
+      });
+
       const response = await fetch('https://backendweb-0kwi.onrender.com/api/submit-property-form', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
+        body: formDataToSend,
       });
 
       if (!response.ok) {
@@ -189,11 +199,10 @@ const PropertyForm = () => {
       setLoading(false);
 
       // Save form data if needed
-    setSubmittedFormData(formData);
+      setSubmittedFormData(formData);
 
       // Navigate to the identification page after successful submission
       history.push('/identification');
-
     } catch (error) {
       console.error('Error submitting form:', error);
       toast.error('Failed to submit form. Please try again.');
