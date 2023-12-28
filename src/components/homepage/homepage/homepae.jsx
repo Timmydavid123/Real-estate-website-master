@@ -8,14 +8,14 @@ import { states, Cities } from '../../data/Data';
 const Property = () => {
   const [isLoggedIn, setLoggedIn] = useState(false); // Add this line
   const [propertyTypes, setPropertyTypes] = useState([]);
-  const [stateLocations, setStateLocations] = useState(states);
-  const [cityLocations, setCityLocations] = useState(Cities);
+  const [stateLocations, ] = useState(states);
+  const [cityLocations, ] = useState(Cities);
   const [properties, setProperties] = useState([]);
   const [filteredProperties, setFilteredProperties] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [propertiesPerPage] = useState(10);
+  const [propertiesPerPage] = useState(10); 
   const [selectedLocation, setSelectedLocation] = useState('');
   const [isLocationPopupVisible, setLocationPopupVisible] = useState(false);
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState} from 'react';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useHistory } from 'react-router-dom';
@@ -6,6 +6,7 @@ import SignatureCanvas from 'react-signature-canvas';
 import Select from 'react-select';
 import { states, Cities, LGAs } from '../data/Data';
 import './property.css';
+import PropertyList from '../homepage/PropertyList/PropertyList'; 
 
 
 const PropertyForm = () => {
@@ -18,11 +19,11 @@ const PropertyForm = () => {
     phoneNumber: '',
     propertyType: '',
     propertyAmount: '',
-    propertyPictures: [],
+    propertyPictures: [], // Ensure propertyPictures is initialized as an empty array
     propertyLocation: {
       state: '',
       city: '',
-      lga: '', // Add LGA here
+      lga: '', 
     },
     propertyAddress: '',
     propertyCountry: '',
@@ -44,14 +45,52 @@ const PropertyForm = () => {
   const [selectedLGA, setSelectedLGA] = useState(null);
 
   const [loading, setLoading] = useState(false);
+  const [submittedFormData, setSubmittedFormData] = useState(null); 
+  const [imagePreviews, setImagePreviews] = useState([]);
 
-  const handleChange = (e) => {
-    const { name, value, type } = e.target;
+  const handleChange = async (e) => {
+    const { name, type } = e.target;
 
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: type === 'file' ? e.target.files : value,
-    }));
+    if (name === 'propertyPictures') {
+      const files = e.target.files;
+
+      if (files) {
+        const picturePreviews = [];
+
+        for (const file of files) {
+          const dataUrl = await readFileAsync(file);
+          picturePreviews.push(dataUrl);
+        }
+
+        setFormData((prevData) => ({
+          ...prevData,
+          propertyPictures: files,
+        }));
+
+        setImagePreviews(picturePreviews);
+      }
+    } else {
+      setFormData((prevData) => ({
+        ...prevData,
+        [name]: type === 'file' ? e.target.files : e.target.value,
+      }));
+    }
+  };
+
+  const readFileAsync = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+
+      reader.onload = (event) => {
+        resolve(event.target.result);
+      };
+
+      reader.onerror = (error) => {
+        reject(error);
+      };
+
+      reader.readAsDataURL(file);
+    });
   };
 
   const handleStateChange = (selectedOption) => {
@@ -86,19 +125,20 @@ const PropertyForm = () => {
       },
     }));
   };
-  const handlepropertyOwnerSignature = (data) => {
+  const handlePropertyOwnerSignature = (data) => {
     setFormData((prevData) => ({
       ...prevData,
-      guarantor1Signature: data,
+      propertyOwnerSignature: data,
     }));
   };
+  
   const handleGuarantor1Signature = (data) => {
     setFormData((prevData) => ({
       ...prevData,
       guarantor1Signature: data,
     }));
   };
-
+  
   const handleGuarantor2Signature = (data) => {
     setFormData((prevData) => ({
       ...prevData,
@@ -132,7 +172,7 @@ const PropertyForm = () => {
 
     try {
       // Send form data to backend
-      const response = await fetch('https://backendweb-0kwi.onrender.com/submit-property-form', {
+      const response = await fetch('https://backendweb-0kwi.onrender.com/api/submit-property-form', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -148,6 +188,9 @@ const PropertyForm = () => {
       // Hide loader
       setLoading(false);
 
+      // Save form data if needed
+    setSubmittedFormData(formData);
+
       // Navigate to the identification page after successful submission
       history.push('/identification');
 
@@ -160,6 +203,7 @@ const PropertyForm = () => {
   };
 
   return (
+    <div>
     <form className="property-form" onSubmit={handleSubmit}>
       <h2>Property Information</h2>
 
@@ -227,24 +271,28 @@ const PropertyForm = () => {
         />
       </label>
 
-      {/* Picture of Properties (Camera Supported) */}
-      <label>
-        Pictures of Properties:
-        <input
-          type="file"
-          accept="image/*"
-          capture="environment"
-          name="propertyPictures"
-          onChange={handleChange}
-          multiple // Allow multiple file selection
-          required // Make it required
-        />
-        {/* Show uploaded pictures */}
-        {Array.isArray(formData.propertyPictures) &&
-          formData.propertyPictures.map((picture, index) => (
-            <img key={index} src={URL.createObjectURL(picture)} alt={`Property ${index}`} />
+        {/* Picture of Properties (Camera Supported) */}
+        <label>
+          Pictures of Properties:
+          <input
+            type="file"
+            accept="image/*"
+            capture="environment"
+            name="propertyPictures"
+            onChange={handleChange}
+            multiple // Allow multiple file selection
+            required // Make it required
+          />
+          {/* Show uploaded pictures */}
+          {imagePreviews.map((preview, index) => (
+            <img
+              key={index}
+              src={preview}
+              alt={`Property ${index}`}
+              style={{ maxWidth: '150px', maxHeight: '150px', margin: '5px' }}
+            />
           ))}
-      </label>
+        </label>
 
       {/* Property Address */}
       <label>
@@ -317,7 +365,7 @@ const PropertyForm = () => {
         <SignatureCanvas
           penColor="black"
           canvasProps={{ width: 400, height: 200, className: 'signature-canvas' }}
-          onEnd={(data) => handlepropertyOwnerSignature(data)}
+          onEnd={(data) => handlePropertyOwnerSignature (data)}
           required
         />
       </label>
@@ -440,11 +488,15 @@ const PropertyForm = () => {
       </label>
 
       {/* Submit Button */}
-      <button type="subt">Submit</button>
+      <button type="submit">Submit</button>
       {loading && <div className="loader"></div>}
       <ToastContainer />
     </form>
+
+      {/* Render PropertyList with submittedFormData */}
+      {submittedFormData && <PropertyList formSubmittedData={submittedFormData} />}
+    </div>
   );
 };
 
-export default PropertyForm;  
+export default PropertyForm; 

@@ -32,6 +32,10 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   margin-top: 140px;
   color: #fff;
+
+}
+.top-left-content h3 {
+  color: #fff;
 }
 
 h5, h3 {
@@ -89,6 +93,7 @@ form h4 {
   }
   .top-left-content h3 {
     font-size: 15px;
+    color: #fff;
   }
   form {
     display: flex;

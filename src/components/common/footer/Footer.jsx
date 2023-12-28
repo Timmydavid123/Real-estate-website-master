@@ -1,5 +1,4 @@
 import React from "react"
-import { footer } from "../../data/Data"
 import "./footer.css"
 
 const Footer = () => {
@@ -19,7 +18,17 @@ const Footer = () => {
               </div>
             </div>
           </div>
-
+    <div>
+      <div className="flex">
+        <div className="nav-item">
+          <h4>Contact Us</h4>
+          <ul>
+            <li><a href="*#">+23487489o</a></li>
+            
+          </ul>
+        </div>
+      </div>
+    </div>
         </div>  
       </footer>
       <div className='legal'>

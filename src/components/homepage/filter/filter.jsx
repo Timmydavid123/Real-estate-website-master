@@ -5,7 +5,7 @@ import { Card } from 'react-bootstrap';
 import '@fortawesome/fontawesome-free/css/all.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './filter.css';
-import { states, cities } from '../../data/Data';
+// import { states, cities } from '../../data/Data';
 
 const Filter = ({ onFilter, stateLocations, cityLocations, onLocationClick }) => {
   const [location, setLocation] = useState('All Nigeria');
