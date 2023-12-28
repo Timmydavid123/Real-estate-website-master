@@ -277,7 +277,7 @@ const PropertyForm = () => {
         <input
           type="file"
           accept="image/*"
-          capture="user"
+          // capture="user"
           name="propertyPictures"
           onChange={handleChange}
           required // Make it required
