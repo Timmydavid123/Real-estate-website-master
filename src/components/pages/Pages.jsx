@@ -15,6 +15,7 @@ import IdentificationPage from "../identification/identification"
 import Chat from "../chat/chat"
 import AdminLogin from "../admindashboard/AdminLogin"
 import AdminDashboard from "../admindashboard/AdminDashboard"
+import ThankYouPage from "../ThankYOU/thankyou"
 
 const Pages = () => {
   return (
@@ -41,6 +42,7 @@ const Pages = () => {
         <Route exact path="/chat" component={Chat} />
         <Route exact path="/admin" component={AdminLogin} />
         <Route exact path="/admin/dashboard" component={AdminDashboard} />
+        <Route exact path="/Thankyou" component={ThankYouPage} />
       </Switch>
     </Router>
   );  

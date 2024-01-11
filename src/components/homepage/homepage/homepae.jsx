@@ -1,13 +1,16 @@
+// Property.js
 import React, { useState, useEffect } from 'react';
 import './homepage.css';
+import { useHistory } from 'react-router-dom'; 
 import Filter from '../filter/filter';
 import PropertyList from '../PropertyList/PropertyList';
 import Pagination from '../pagination/pagination';
 import { states, Cities } from '../../data/Data';
 
 const Property = () => {
-  const [isLoggedIn, setLoggedIn] = useState(false); // Add this line
-  const [propertyTypes, setPropertyTypes] = useState([]);
+  const history = useHistory();
+  const [isLoggedIn, setLoggedIn] = useState(false);
+  const [propertyTypes,] = useState([]);
   const [stateLocations, ] = useState(states);
   const [cityLocations, ] = useState(Cities);
   const [properties, setProperties] = useState([]);
@@ -15,18 +18,19 @@ const Property = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [propertiesPerPage] = useState(10); 
+  const [propertiesPerPage] = useState(10);
   const [selectedLocation, setSelectedLocation] = useState('');
   const [isLocationPopupVisible, setLocationPopupVisible] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const propertyTypesResponse = await fetch('https://api.example.com/property-types');
-        const propertyTypesData = await propertyTypesResponse.json();
-        setPropertyTypes(propertyTypesData);
+        // Update the URL to your backend API endpoint for fetching approved properties
+        const propertiesResponse = await fetch('https://api.example.com/approved-properties');
+        if (!propertiesResponse.ok) {
+          throw new Error('Failed to fetch approved properties');
+        }
 
-        const propertiesResponse = await fetch('https://api.example.com/properties');
         const propertiesData = await propertiesResponse.json();
         setProperties(propertiesData);
         setFilteredProperties(propertiesData);
@@ -65,20 +69,21 @@ const Property = () => {
   const handleLocationClick = location => {
     setSelectedLocation(location);
     setLocationPopupVisible(true);
-  
+
     // Filter properties based on the selected state
     const filtered = properties.filter(property => {
       return property.location === location;
     });
-  
+
     setFilteredProperties(filtered);
     setCurrentPage(1);
   };
-  
+
   const closeLocationPopup = () => {
     setSelectedLocation('');
     setLocationPopupVisible(false);
   };
+
   const handleLogout = () => {
     // Perform any necessary logout actions
     setLoggedIn(false);
@@ -86,7 +91,7 @@ const Property = () => {
 
   const renderLocationPopup = () => {
     if (!selectedLocation || !isLocationPopupVisible) return null;
-  
+
     const isState = stateLocations.includes(selectedLocation);
     const isCity = cityLocations.includes(selectedLocation);
 
@@ -114,17 +119,21 @@ const Property = () => {
     );
   };
 
+  const handleBuyClick = () => {
+    // Navigate to the PropertyUpload page when Buy button is clicked
+    history.push('/propertyupload');
+  };
+
   return (
-<div className="App">
+    <div className="App">
       <div className="top-bar">
         {/* <div className="logo-container">
           <img src="../images/logo.png" alt="Logo" className="logo" />
         </div> */}
-        <button className="top-button">Settings</button>
+        <button className="top-button" onClick={handleBuyClick}>Buy</button>
         {isLoggedIn && <button className="top-button" onClick={handleLogout}>Logout</button>}
-        <button className="top-button">Buy</button>
+        <button className="top-button">Settings</button>
       </div>
-
 
       <div className="filter-container">
         <Filter

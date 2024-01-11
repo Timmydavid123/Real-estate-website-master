@@ -75,7 +75,7 @@ const IdentificationPage = () => {
       setLoading(false);
       toast.success('Identification details submitted successfully!');
       // Navigate to the property page after successful submission
-      history.push('/property');
+      history.push('/thankyou');
     } catch (error) {
       console.error('Error submitting identification details:', error);
       setLoading(false);

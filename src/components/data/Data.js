@@ -3,29 +3,29 @@
   ]
 export const featured = [
   {
-    cover: "../images/hero/h1.png",
+    cover: "../images/hero/h6.png ",
     name: "Commercial Building",
-    total: "122 Property",
+    total: "500+ Property",
   },
   {
     cover: "../images/hero/h2.png",
     name: "Residential Building",
-    total: "155 Property",
+    total: "200+ Property",
   },
   {
     cover: "../images/hero/h3.png",
     name: "Residential Land",
-    total: "300 Property",
+    total: "300+ Property",
   },
   {
     cover: "../images/hero/h4.png",
     name: "Commercial Land",
-    total: "80 Property",
+    total: "300+ Property",
   },
   {
-    cover: "../images/hero/h6.png",
+    cover: "../images/hero/h1.png",
     name: "Agricultural Land",
-    total: "80 Property",
+    total: "100+ Property",
   },
 ]
 export const list = [

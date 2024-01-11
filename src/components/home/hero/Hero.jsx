@@ -39,7 +39,7 @@ const Hero = () => {
             <h5>BUY | SELL</h5>
             <h3>Payment Option: Outright Payment | Installmental Payment | Crowd Funding </h3>
           </div>
-          <Heading title='Buy and Sell Homes at Your Own Price with Flexibility!: Unlock Your Ideal Property Journey:' />
+          <Heading title='Buy and Sell Homes at your own rice with Flexibility!: Unlock Your Ideal Property Journey:' />
 
           <form className='flex'>
             <div className='box'>

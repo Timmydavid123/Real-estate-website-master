@@ -33,7 +33,7 @@ header h4 {
   font-weight: 500;
   margin-right: 10px;
 }
-.btn1 {
+.btn11 {
   margin-left: 100px;
 }
 .btn9 {
@@ -42,8 +42,12 @@ header h4 {
 header .toggle {
   display: none;
 }
+.logos {
+  margin-left: -220px;
+  margin-top: -5px;
+}
 
-.btn1{ 
+.btn11{ 
   background: linear-gradient(to right, #a0d8ab, #01e85e);
   border: none;
   color: white;
@@ -51,10 +55,10 @@ header .toggle {
   text-align: center;
   text-decoration: none;
   display: inline-block;
-  font-size: 19px;
+  font-size: 12px;
   cursor: pointer;
-  border-radius: 5px;
-  margin-top: -130px;
+  border-radius: 9px;
+  margin-top: -290px;
 }
 
 .btn9 {

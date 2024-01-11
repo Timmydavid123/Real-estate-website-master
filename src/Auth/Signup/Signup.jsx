@@ -60,6 +60,8 @@ const SignupPage = () => {
         password,
         confirmPassword,
         agreed,
+      }, {
+        withCredentials: true,
       });
 
       console.log('Received signup response:', response);
